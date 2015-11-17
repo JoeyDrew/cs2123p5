@@ -31,7 +31,7 @@ Notes:
 *********************************/
 void setRoot(Tree tree)
 {
-	NodeT *pNew;
+	NodeT *pNew = malloc(sizeof(NodeT));
 	char szId[MAX_TOKEN_SIZE - 1] = "ROOT";
 	// set the values for the root element.
 	strcpy(pNew->element.szId, szId);			// unique ID named ROOT so that ID's being put into
@@ -57,17 +57,18 @@ Notes:
 *************************************/
 int defineCommand(char szToken[])
 {
-	if (szToken == "DEFINE")
+	if (strcmp(szToken, "DEFINE"))
 		return DEFINE;
-	else if (szToken == "QUOTE")
+	else if (strcmp(szToken, "QUOTE"))
 		return QUOTE;
-	else if (szToken == "PRINT")
+	else if (strcmp(szToken, "PRINT"))
 		return PRINT;
-	else if (szToken == "DELETE")
+	else if (strcmp(szToken, "DELETE"))
 		return DELETE;
 	else
 	{
-		printf("Error: Command not found");
+		printf("Error: Command not found\n");
+		exit (-1);
 	}
 }
 /********* allocateNodeT *********
@@ -139,7 +140,7 @@ void defineValue(Tree tree, char szToken[], NodeT *pNew, char *pszRemainingTxt)
 	
 
 	// if the command line is DEFINE, then check the second token.
-	if (szToken == "OPTION")
+	if (strcmp(szToken, "OPTION"))
 	{
 			// set the cNodeType of the element to O, indicating that it is an OPTION
 			pNew->element.cNodeType = 'O';
@@ -160,7 +161,7 @@ void defineValue(Tree tree, char szToken[], NodeT *pNew, char *pszRemainingTxt)
 			insertPriceMenu(tree, pNew->element, szSubordinateToId);
 	}
 
-	else if (szToken == "VALUE")
+	else if (strcmp(szToken, "VALUE"))
 	{
 			// set the cNodeType of the element to V, indicating that it is a VALUE
 			pNew->element.cNodeType = 'V';
@@ -217,7 +218,7 @@ Notes: None.
 void printPriceMenu(NodeT *p, int iIndent)
 {
 	int i;
-	if (p = NULL)
+	if (p == NULL)
 		return;
 	printPriceMenu(p->pChild, iIndent + 1);
 	printf("\t");
@@ -287,7 +288,7 @@ Notes: Function created by J'hon
 NodeT *findId(NodeT *p, char szId[])
 {
         if (p == NULL)
-                return;
+                return NULL;
         if (strcmp(p->element.szId, szId) == 0)
                 return p;
         if (p->pChild != NULL)
@@ -318,7 +319,7 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 	NodeT *pCheck, *pSiblingCheck, *pChildCheck;
 	//checks for NULL p
 	if (p == NULL)
-		return;
+		return NULL;
 	//checks to see if a pkid is at the root of the tree
 	if (pParent == NULL && strcmp(p->element.szId, pkid->element.szId) == 0)
 		return NULL;
@@ -362,7 +363,7 @@ Notes:
 *********************************/
 void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[])
 {
-	NodeT *pNew;
+	NodeT *pNew = malloc(sizeof (NodeT));
 	char szToken[MAX_TOKEN_SIZE];
 	char *pszRemainingTxt;
 	int iSwitchCode;
@@ -393,12 +394,12 @@ void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer[])
 		// if case is PRINT
 		case PRINT:
 			pszRemainingTxt = getToken(pszRemainingTxt, szToken, MAX_TOKEN_SIZE - 1);
-			if (szToken == "ALL")
+			if (strcmp(szToken, "ALL"))
 			{
 				printf("%-6s\n", tree->pRoot->element.szTitle);
 				printPriceMenu(tree->pRoot->pChild, 0);
 			}
-			else if (szToken == "ONE")
+			else if (strcmp(szToken, "ONE"))
 			{
 				pszRemainingTxt = getToken(pszRemainingTxt, szToken, MAX_TOKEN_SIZE - 1);
 				//printOne(tree, szToken);
