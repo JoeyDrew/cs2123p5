@@ -318,7 +318,7 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
                 return;
         if (pParent == NULL && strcmp(p -> element.szId, pkid -> element.szId) == 0)
                 return NULL;
-        pC = findID(p, pkid);
+        pC = findId(p, pkid->element.szId);
         if (pC != NULL)
         {
                 if (pParent != NULL && strcmp(p->element.szId, pkid->element.szId) == 0)
