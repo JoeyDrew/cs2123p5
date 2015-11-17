@@ -18,8 +18,6 @@ Purpose:
 #include <stdlib.h>
 #include "cs2123p5.h"
 
-
-
 /*********** setRoot *************
 NodeT setRoot(Tree tree)
 Purpose:
@@ -302,37 +300,51 @@ NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pKid)
 Purpose:
 Returns the parent of a given node. Returns NULL if not found or doesn't have a parent.
 Parameters:
-I       NodeT   *pParent                        //current parent level
-I       NodeT   *p                                      //tree of options
-I       NodeT   *pKid                           //child used to find the parent
+I/O	NodeT	*pParent			//current parent level
+I/O	NodeT	*p					//tree of options
+I/O	NodeT	*pKid				//child used to find the parent
+I	NodeT	*pCheck				//checks to see if pKid exists in tree
+I	NodeT	*pSiblingCheck		//recursively searches through siblings Nodes
+I	NodeT	*pChildCheck		//recursively searches through children Nodes
 Returns:
-NULL    - Not found, No Parent
+NULL	- Not found, No Parent
 pParent - Returns the found parent held in pParent
-p               - Returns the current Node in p if it is the parent.
+p		- Returns the current Node in p if it is the parent.
 Notes: None.
 ******************************************/
 NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
 {
-        NodeT *pC, *pSC, *pCC;
-        if(p == NULL)
-                return;
-        if (pParent == NULL && strcmp(p -> element.szId, pkid -> element.szId) == 0)
-                return NULL;
-        pC = findId(p, pkid->element.szId);
-        if (pC != NULL)
-        {
-                if (pParent != NULL && strcmp(p->element.szId, pkid->element.szId) == 0)
-                        return pParent;
-                pSC = findParent(pParent, p->pSibling, pkid);
-                pCC = findParent(p, p->pChild, pkid);
-                if (pSC != NULL)
-                        return pSC;
-                if (pCC != NULL)
-                        return pCC;
- 
-        }
-        return NULL;
- 
+	//Node checkers
+	NodeT *pCheck, *pSiblingCheck, *pChildCheck;
+	//checks for NULL p
+	if (p == NULL)
+		return;
+	//checks to see if a pkid is at the root of the tree
+	if (pParent == NULL && strcmp(p->element.szId, pkid->element.szId) == 0)
+		return NULL;
+	//checks for pkid in tree
+	pCheck = findId(p, pkid->element.szId);
+	//continue checking
+	if (pCheck != NULL)
+	{
+		//checks if pParent has been found
+		if (pParent != NULL && strcmp(p->element.szId, pkid->element.szId) == 0)
+			return pParent;
+		//recursively search siblings
+		pSiblingCheck = findParent(pParent, p->pSibling, pkid);
+		//recursively search children
+		pChildCheck = findParent(p, p->pChild, pkid);
+		//checks for NULL sibling checks
+		if (pSiblingCheck != NULL)
+			return pSiblingCheck;
+		//checks for NULL child checks
+		if (pChildCheck != NULL)
+			return pChildCheck;
+
+	}
+	//else return NULL
+	return NULL;
+
 }
 
 /******** processCommand *********
