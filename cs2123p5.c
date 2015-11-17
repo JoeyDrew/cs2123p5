@@ -297,6 +297,44 @@ NodeT *findId(NodeT *p, char szId[])
         return findId(p->pSibling, szId);
 }
 
+/************ findParent **************
+NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pKid)
+Purpose:
+Returns the parent of a given node. Returns NULL if not found or doesn't have a parent.
+Parameters:
+I       NodeT   *pParent                        //current parent level
+I       NodeT   *p                                      //tree of options
+I       NodeT   *pKid                           //child used to find the parent
+Returns:
+NULL    - Not found, No Parent
+pParent - Returns the found parent held in pParent
+p               - Returns the current Node in p if it is the parent.
+Notes: None.
+******************************************/
+NodeT *findParent(NodeT *pParent, NodeT *p, NodeT *pkid)
+{
+        NodeT *pC, *pSC, *pCC;
+        if(p == NULL)
+                return;
+        if (pParent == NULL && strcmp(p -> element.szId, pkid -> element.szId) == 0)
+                return NULL;
+        pC = findID(p, pkid);
+        if (pC != NULL)
+        {
+                if (pParent != NULL && strcmp(p->element.szId, pkid->element.szId) == 0)
+                        return pParent;
+                pSC = findParent(pParent, p->pSibling, pkid);
+                pCC = findParent(p, p->pChild, pkid);
+                if (pSC != NULL)
+                        return pSC;
+                if (pCC != NULL)
+                        return pCC;
+ 
+        }
+        return NULL;
+ 
+}
+
 /******** processCommand *********
 void processCommand(Tree tree, QuoteSelection quote, char szInputBuffer)
 Purpose:
